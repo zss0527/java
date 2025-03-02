@@ -1,0 +1,26 @@
+redis:
+  cluster:
+    nodes: 192.168.1.101:6379
+  timeout: 2000
+  password: 123456
+  pool:
+    max-active: 100
+    max-idle: 20
+    min-idle: 10
+
+#commons pool
+spring:
+  data:
+    redis:
+      password: 123456
+      cluster:
+        nodes: 192.168.1.101:6379
+      lettuce:
+        pool:
+          enabled: true
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+      timeout: 5000ms
+
