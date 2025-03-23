@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("users")
+@TableName("user")
 public class User {
     private Integer id;
     private String username;
     private String password;
-    private Integer enabled;
+    private Boolean enabled;
 }
