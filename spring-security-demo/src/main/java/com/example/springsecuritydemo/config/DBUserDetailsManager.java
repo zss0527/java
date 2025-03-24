@@ -5,11 +5,15 @@ import com.example.springsecuritydemo.entity.User;
 import com.example.springsecuritydemo.mapper.UserMapper;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Configuration
@@ -22,11 +26,9 @@ public class DBUserDetailsManager implements UserDetailsManager, UserDetailsPass
     public UserDetails updatePassword(UserDetails user, String newPassword) {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                newPassword,true,
-                true,
-                true,
-                true,
-                List.of()
+                newPassword,
+                user.getAuthorities()
+
         );
     }
 
@@ -73,15 +75,20 @@ public class DBUserDetailsManager implements UserDetailsManager, UserDetailsPass
         if (user == null) {
             throw new UsernameNotFoundException(username);
         } else {
-            return new org.springframework.security.core.userdetails.User(
-                    user.getUsername(),
-                    user.getPassword(),
-                    user.getEnabled(),
-                    true,
-                    true,
-                    true,
-                    List.of()
-            );
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("USER_LIST"));
+            authorities.add(new SimpleGrantedAuthority("USER_ADD"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//            return new org.springframework.security.core.userdetails.User(
+//                    user.getUsername(),
+//                    user.getPassword(),
+//                    authorities
+//            );
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(user.getUsername())
+                    .password(user.getPassword())
+                    .roles("READER")
+                    .build();
         }
     }
 }

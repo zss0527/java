@@ -3,10 +3,16 @@ package com.example.springsecuritydemo.controller;
 import com.example.springsecuritydemo.entity.User;
 import com.example.springsecuritydemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -17,8 +23,14 @@ public class UserController {
     private UserService userService;
 
     // 查询所有用户
-    @GetMapping
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('READER') and authentication.name == 'larry'")
     public List<User> getAllUsers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        Object credentials = authentication.getCredentials();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
         return userService.list();
     }
 
@@ -30,6 +42,7 @@ public class UserController {
 
     // 添加用户
     @PostMapping
+    @PreAuthorize("hasRole('EDITOR')")
     public String addUser(@RequestBody User user) {
 //        userService.save(user);
         userService.saveUserDetails(user);

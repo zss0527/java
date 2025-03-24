@@ -1,0 +1,2 @@
+client id: Ov23liuwkbMcIyj77QYo
+client secrets: 93e830a462e159be398a7282a7e4c0b590f89cc2
