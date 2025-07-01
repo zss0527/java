@@ -1,0 +1,1 @@
+master分支包含实用java springboot做后端service开发常用到的基本功能，包括：restful接口、spring data jpa做数据库crud和连表操作、分页查询、文件上传、spring retry、spring security等
